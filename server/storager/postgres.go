@@ -31,7 +31,24 @@ func (p *PostgreSQL) Close() error {
 }
 
 func (p *PostgreSQL) GetAllCats() ([]DbCat, error) {
-	return []DbCat{}, nil
+	rows, err := p.db.Query("SELECT * FROM cats")
+	if err != nil {
+		return []DbCat{}, err
+	}
+	defer rows.Close()
+
+	var results []DbCat
+
+	for rows.Next() {
+		var c DbCat
+		err := rows.Scan(&c.ID, &c.Name, &c.YearsOfExperience, &c.Breed, &c.Salary)
+		if err != nil {
+			return []DbCat{}, err
+		}
+		results = append(results, c)
+	}
+
+	return results, nil
 }
 
 func (p *PostgreSQL) GetSpecificCat(id string) (DbCat, error) {
