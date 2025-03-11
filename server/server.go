@@ -12,7 +12,7 @@ type server struct {
 }
 
 func New() server {
-	gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.DebugMode)
 	router := gin.Default()
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())

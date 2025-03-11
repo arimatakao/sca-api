@@ -10,7 +10,7 @@ import (
 func (s *server) CatList(c *gin.Context) {
 	cats, err := s.db.GetAllCats()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "")
+		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 
