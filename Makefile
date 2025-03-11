@@ -1,5 +1,5 @@
 run:
-	go run main.go
+	go run main.go -config ./config.yaml
 build:
 	mkdir bin
 	go build -o ./bin/sca-api main.go
