@@ -19,11 +19,7 @@ app:
   db_url: "postgresql://user:password@127.0.0.1:5432/mycats?sslmode=disable"
 ```
 
-Start database containers:
-
-```sh
-docker compose up -d
-```
+*see `config_docker.yaml` and `config_example.yaml`*
 
 `127.0.0.1:8081` - pgadmin
 
@@ -41,3 +37,13 @@ Or build binary file and run:
 make build
 ./bin/sca-api -config ./config.yaml
 ```
+
+## Docker
+
+Run in docker:
+
+```sh
+docker compose up -d
+```
+
+*this command will use `config_docker.yaml` file as config*

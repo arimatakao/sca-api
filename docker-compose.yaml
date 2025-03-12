@@ -26,3 +26,18 @@ services:
       - db
     # volumes:
     #   - pgadmin-data:/var/lib/pgadmin
+
+  scaapi:
+    container_name: sca_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - pgadmin
+    volumes:
+      - "./config_example.yaml:/config.yaml"
+    command: "-config /config.yaml"
