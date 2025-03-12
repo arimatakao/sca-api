@@ -30,7 +30,7 @@ func (s server) Run() error {
 	base.GET(catsPath+"/:id", s.SpecificCat)
 	base.POST(catsPath, s.CreateCat)
 	base.PUT(catsPath+"/:id", s.UpdateCat)
-	base.DELETE(catsPath, s.DeleteCat)
+	base.DELETE(catsPath+"/:id", s.DeleteCat)
 
 	// missionsPath := "/missions"
 	// base.GET(missionsPath, MissionsList)

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/arimatakao/sca-api/server/storager"
@@ -10,7 +11,13 @@ import (
 func (s *server) CatList(c *gin.Context) {
 	cats, err := s.db.GetAllCats()
 	if err != nil {
+		log.Println(err)
 		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	if len(cats) == 0 {
+		c.Status(http.StatusOK)
 		return
 	}
 
@@ -38,12 +45,17 @@ func (s *server) SpecificCat(c *gin.Context) {
 func (s *server) CreateCat(c *gin.Context) {
 	var cat storager.Cat
 
+	if err := c.ShouldBindJSON(&cat); err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
 	if err := s.db.CreateCat(cat); err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, "")
+	c.Status(http.StatusOK)
 }
 
 func (s *server) UpdateCat(c *gin.Context) {
@@ -66,7 +78,7 @@ func (s *server) UpdateCat(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusOK, "")
+	c.Status(http.StatusOK)
 }
 
 func (s *server) DeleteCat(c *gin.Context) {
@@ -85,5 +97,5 @@ func (s *server) DeleteCat(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, "")
+	c.Status(http.StatusOK)
 }
