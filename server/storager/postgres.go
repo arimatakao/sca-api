@@ -82,3 +82,43 @@ func (p *PostgreSQL) DeleteCat(id string) error {
 	_, err := p.db.Exec("DELETE FROM cats WHERE id=$1", id)
 	return err
 }
+
+func (p *PostgreSQL) GetAllMissions() ([]DbMission, error) {
+	return []DbMission{}, nil
+}
+
+func (p *PostgreSQL) GetSpecificMission(id string) (DbMission, error) {
+	return DbMission{}, nil
+}
+
+func (p *PostgreSQL) CreateMission(m Mission) error {
+	// MAKE SURE YOU ARE GET CREATED TARGET IDS INSTED JUST TARGET STRUCT
+	return nil
+}
+func (p *PostgreSQL) UpdateMission(m Mission) error {
+	return nil
+}
+
+func (p *PostgreSQL) DeleteMission(id string) error {
+	return nil
+}
+
+func (p *PostgreSQL) GetMissionTargets(id string) ([]DbTarget, error) {
+	return []DbTarget{}, nil
+}
+
+func (p *PostgreSQL) CreateMissionTarget(Target) (string, error) {
+	return "", nil
+}
+
+func (p *PostgreSQL) GetTarget(id string) (DbTarget, error) {
+	return DbTarget{}, nil
+}
+
+func (p *PostgreSQL) AddTargetToMission(idTarget string, idMission string) error {
+	return nil
+}
+
+func (p *PostgreSQL) UpdateMissionTarget(id string, t Target) error {
+	return nil
+}

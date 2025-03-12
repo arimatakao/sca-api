@@ -8,7 +8,7 @@ import (
 
 type server struct {
 	r  *gin.Engine
-	db storager.CatStorager
+	db storager.DbStorager
 }
 
 func New() server {
@@ -32,16 +32,16 @@ func (s server) Run() error {
 	base.PUT(catsPath+"/:id", s.UpdateCat)
 	base.DELETE(catsPath+"/:id", s.DeleteCat)
 
-	// missionsPath := "/missions"
-	// base.GET(missionsPath, MissionsList)
-	// base.GET(missionsPath+"/:id", SpecificMission)
-	// base.POST(missionsPath, CreateMission)
-	// base.PUT(missionsPath+"/:id", UpdateMission)
-	// base.DELETE(missionsPath, DeleteMission)
+	missionsPath := "/missions"
+	base.GET(missionsPath, s.MissionsList)
+	base.GET(missionsPath+"/:id", s.SpecificMission)
+	base.POST(missionsPath, s.CreateMission)
+	base.PUT(missionsPath+"/:id", s.UpdateMission)
+	base.DELETE(missionsPath, s.DeleteMission)
 
-	// base.GET(missionsPath+"/:id/targets", MissionTargetList)
-	// base.POST(missionsPath+"/:id/targets/:idTarget", CreateMissionTarget)
-	// base.PUT(missionsPath+"/:id/targets/:idTarget", UpdateMissionTarget)
+	base.GET(missionsPath+"/:id/targets", s.MissionTargetList)
+	base.POST(missionsPath+"/:id/targets/:idTarget", s.CreateMissionTarget)
+	base.PUT(missionsPath+"/:id/targets/:idTarget", s.UpdateMissionTarget)
 
 	db, err := storager.NewPostgreSQL(config.App.DbUrl)
 	if err != nil {
