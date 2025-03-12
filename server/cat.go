@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/arimatakao/sca-api/external"
 	"github.com/arimatakao/sca-api/server/storager"
 	"github.com/gin-gonic/gin"
 )
@@ -28,7 +29,7 @@ func (s *server) SpecificCat(c *gin.Context) {
 	catId := c.Param("id")
 	if catId == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"meessage": "bad cat id",
+			"message": "bad cat id",
 		})
 		return
 	}
@@ -50,6 +51,18 @@ func (s *server) CreateCat(c *gin.Context) {
 		return
 	}
 
+	isBreedAllow, err := external.IsBreedAllowed(cat.Breed)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+	if !isBreedAllow {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "breed is not allowed",
+		})
+		return
+	}
+
 	if err := s.db.CreateCat(cat); err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
@@ -64,13 +77,25 @@ func (s *server) UpdateCat(c *gin.Context) {
 
 	if catId == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"meessage": "bad cat id",
+			"message": "bad cat id",
 		})
 		return
 	}
 
 	if err := c.ShouldBindJSON(&catFields); err != nil {
 		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	isBreedAllow, err := external.IsBreedAllowed(catFields.Name)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+	if !isBreedAllow {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "breed is not allowed",
+		})
 		return
 	}
 
@@ -87,7 +112,7 @@ func (s *server) DeleteCat(c *gin.Context) {
 
 	if catId == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"meessage": "bad cat id",
+			"message": "bad cat id",
 		})
 		return
 	}
