@@ -2,6 +2,7 @@ package storager
 
 import (
 	"database/sql"
+	"strconv"
 
 	_ "github.com/lib/pq"
 )
@@ -84,39 +85,120 @@ func (p *PostgreSQL) DeleteCat(id string) error {
 }
 
 func (p *PostgreSQL) GetAllMissions() ([]DbMission, error) {
-	return []DbMission{}, nil
+	rows, err := p.db.Query("SELECT * FROM missions")
+	if err != nil {
+		return []DbMission{}, err
+	}
+	defer rows.Close()
+
+	var results []DbMission
+
+	for rows.Next() {
+		var m DbMission
+		err := rows.Scan(&m.ID, &m.AssigneeId, &m.TargetIds, &m.Note, &m.IsComplete)
+		if err != nil {
+			return []DbMission{}, err
+		}
+		results = append(results, m)
+	}
+
+	return results, nil
 }
 
 func (p *PostgreSQL) GetSpecificMission(id string) (DbMission, error) {
-	return DbMission{}, nil
+	row := p.db.QueryRow("SELECT * FROM missions WHERE id=?", id)
+
+	if row.Err() != nil {
+		return DbMission{}, row.Err()
+	}
+
+	var mission DbMission
+	if err := row.Scan(&mission); err != nil {
+		return DbMission{}, err
+	}
+
+	return mission, nil
 }
 
 func (p *PostgreSQL) CreateMission(m Mission) error {
-	// MAKE SURE YOU ARE GET CREATED TARGET IDS INSTED JUST TARGET STRUCT
-	return nil
+	_, err := p.db.Exec("INSERT INTO missions(assignee_id, target_ids, note, is_complete) VALUES ($1, $2, $3, $4)",
+		m.AssigneeId, m.GetCreatedTargetIds(), m.Note, m.IsComplete)
+	return err
 }
-func (p *PostgreSQL) UpdateMission(m Mission) error {
-	return nil
+func (p *PostgreSQL) UpdateMission(id string, m Mission) error {
+	_, err := p.db.Exec("UPDATE missions SET assignee_id=$1, target_ids=$2, note=$3, is_complete=$4 WHERE id=$5",
+		m.AssigneeId, m.GetCreatedTargetIds(), m.Note, m.IsComplete, id)
+	return err
 }
 
 func (p *PostgreSQL) DeleteMission(id string) error {
-	return nil
+	_, err := p.db.Exec("DELETE FROM missions WHERE id=$1", id)
+	return err
 }
 
 func (p *PostgreSQL) GetMissionTargets(id string) ([]DbTarget, error) {
-	return []DbTarget{}, nil
+	rows, err := p.db.Query(`
+	SELECT t.*
+	FROM targets t
+	JOIN missions m ON m.target_ids @> ARRAY[t.id]
+	WHERE m.id = 1;
+	`)
+	if err != nil {
+		return []DbTarget{}, err
+	}
+	defer rows.Close()
+
+	var results []DbTarget
+
+	for rows.Next() {
+		var t DbTarget
+		err := rows.Scan(&t.ID, &t.Name, &t.Country, &t.Notes, &t.IsComplete)
+		if err != nil {
+			return []DbTarget{}, err
+		}
+		results = append(results, t)
+	}
+
+	return results, nil
 }
 
-func (p *PostgreSQL) CreateMissionTarget(Target) (string, error) {
-	return "", nil
+func (p *PostgreSQL) CreateMissionTarget(t Target) (string, error) {
+	res, err := p.db.Exec("INSERT INTO targets(name, country, is_complete) VALUES ($1, $2, $3)",
+		t.Name, t.Country, t.IsComplete)
+	if err != nil {
+		return "", err
+	}
+
+	lastId, err := res.LastInsertId()
+	if err != nil {
+		return "", err
+	}
+
+	return strconv.Itoa(int(lastId)), nil
 }
 
 func (p *PostgreSQL) GetTarget(id string) (DbTarget, error) {
-	return DbTarget{}, nil
+	row := p.db.QueryRow("SELECT * FROM targets WHERE id=?", id)
+
+	if row.Err() != nil {
+		return DbTarget{}, row.Err()
+	}
+
+	var target DbTarget
+	if err := row.Scan(&target); err != nil {
+		return DbTarget{}, err
+	}
+
+	return target, nil
 }
 
 func (p *PostgreSQL) AddTargetToMission(idTarget string, idMission string) error {
-	return nil
+	_, err := p.db.Exec(`
+	UPDATE missions
+	SET target_ids = array_append(target_ids, $1)
+	WHERE id = $2;
+	`, idTarget, idMission)
+	return err
 }
 
 func (p *PostgreSQL) UpdateMissionTarget(id string, t Target) error {

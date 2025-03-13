@@ -1,5 +1,7 @@
 package storager
 
+import "strconv"
+
 type DbCat struct {
 	ID                int    `json:"id"`
 	Name              string `json:"name"`
@@ -41,10 +43,19 @@ type Target struct {
 
 type DbMission struct {
 	ID         int    `json:"id"`
-	AssigneeId int    `json:"assignee_id"`
+	AssigneeId string `json:"assignee_id"`
 	TargetIds  []int  `json:"target_ids"`
 	Note       string `json:"note"`
 	IsComplete bool   `json:"is_complete"`
+}
+
+func (m DbMission) IsTargetExist(id string) bool {
+	for _, v := range m.TargetIds {
+		if strconv.Itoa(v) == id {
+			return true
+		}
+	}
+	return false
 }
 
 type Mission struct {
@@ -67,7 +78,7 @@ type MissionStorager interface {
 	GetAllMissions() ([]DbMission, error)
 	GetSpecificMission(id string) (DbMission, error)
 	CreateMission(m Mission) error
-	UpdateMission(m Mission) error
+	UpdateMission(id string, m Mission) error
 	DeleteMission(id string) error
 	GetMissionTargets(id string) ([]DbTarget, error)
 	CreateMissionTarget(Target) (targetId string, err error)

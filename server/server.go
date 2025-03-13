@@ -37,10 +37,10 @@ func (s server) Run() error {
 	base.GET(missionsPath+"/:id", s.SpecificMission)
 	base.POST(missionsPath, s.CreateMission)
 	base.PUT(missionsPath+"/:id", s.UpdateMission)
-	base.DELETE(missionsPath, s.DeleteMission)
+	base.DELETE(missionsPath+"/:id", s.DeleteMission)
 
 	base.GET(missionsPath+"/:id/targets", s.MissionTargetList)
-	base.POST(missionsPath+"/:id/targets/:idTarget", s.CreateMissionTarget)
+	base.POST(missionsPath+"/:id/targets", s.CreateMissionTarget)
 	base.PUT(missionsPath+"/:id/targets/:idTarget", s.UpdateMissionTarget)
 
 	db, err := storager.NewPostgreSQL(config.App.DbUrl)

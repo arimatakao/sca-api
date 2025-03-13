@@ -92,17 +92,140 @@ func (s *server) UpdateMission(c *gin.Context) {
 }
 
 func (s *server) DeleteMission(c *gin.Context) {
-	c.String(http.StatusNotImplemented, "not implemented")
+	missionId := c.Param("id")
+	if missionId == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "bad mission id",
+		})
+		return
+	}
+
+	mission, err := s.db.GetSpecificMission(missionId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	if mission.AssigneeId != "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "cat assigned on mission, it cannot be deleted",
+		})
+		return
+	}
+
+	if err = s.db.DeleteMission(missionId); err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.Status(http.StatusOK)
 }
 
 func (s *server) MissionTargetList(c *gin.Context) {
-	c.String(http.StatusNotImplemented, "not implemented")
+	missionId := c.Param("id")
+	if missionId == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "bad mission id",
+		})
+		return
+	}
+
+	targets, err := s.db.GetMissionTargets(missionId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, targets)
 }
 
 func (s *server) CreateMissionTarget(c *gin.Context) {
-	c.String(http.StatusNotImplemented, "not implemented")
+	missionId := c.Param("id")
+
+	if missionId == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "bad mission id",
+		})
+		return
+	}
+
+	var target storager.Target
+
+	if err := c.ShouldBindBodyWithJSON(&target); err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	targetId, err := s.db.CreateMissionTarget(target)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	err = s.db.AddTargetToMission(targetId, missionId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.Status(http.StatusOK)
 }
 
 func (s *server) UpdateMissionTarget(c *gin.Context) {
-	c.String(http.StatusNotImplemented, "not implemented")
+	missionId := c.Param("id")
+	targetId := c.Param("idTarget")
+	if missionId == "" || targetId == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "bad mission id or target id",
+		})
+		return
+	}
+
+	mission, err := s.db.GetSpecificMission(missionId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "mission not exist",
+		})
+		return
+	}
+
+	if !mission.IsTargetExist(targetId) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Target is not exist on this mission",
+		})
+		return
+	}
+
+	if mission.IsComplete {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "changes in completed mission is not allowed",
+		})
+		return
+	}
+
+	target, err := s.db.GetTarget(targetId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	if target.IsComplete {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "changes in completed target is not allowed",
+		})
+		return
+	}
+
+	err = s.db.UpdateMissionTarget(targetId, storager.Target{
+		Name:       target.Name,
+		Country:    target.Country,
+		Notes:      target.Notes,
+		IsComplete: target.IsComplete,
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.Status(http.StatusOK)
 }
