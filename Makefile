@@ -3,6 +3,8 @@ run:
 build:
 	mkdir bin
 	go build -o ./bin/sca-api main.go
+image:
+	docker build --no-cache -t sca-api:latest .
 test:
 	go test -v ./...
 clear:
