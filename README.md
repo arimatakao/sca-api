@@ -21,7 +21,11 @@ app:
 
 *see `config_docker.yaml` and `config_example.yaml`*
 
-`127.0.0.1:8081` - pgadmin
+**Make sure you create tables in the database.**
+
+**The script for table creation is located in `sql/TableCreation.sql`.**
+
+**Example data script `sql/ExampleDataInsertion.sql`.**
 
 ## Native
 
@@ -47,3 +51,21 @@ docker compose up -d
 ```
 
 *this command will use `config_docker.yaml` file as config*
+
+`127.0.0.1:8081` - database administration panel. Login `user@domain.com` Password `password`.
+
+Database connection parameters:
+
+```
+Host name/address: db
+Port: 5432
+Maintenance database: mycats
+Username: user
+Password: password
+```
+
+# Postman collection
+
+1. Open postman
+2. Click on toolbar `File->Import...` (Ctrl+O)
+3. Choose file [sca-api.postman_collection.json](./sca-api.postman_collection.json)
