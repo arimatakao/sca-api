@@ -1,0 +1,405 @@
+{
+	"info": {
+		"_postman_id": "77b48ca1-74e4-4275-a4c6-a099128bb91c",
+		"name": "sca api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43058670"
+	},
+	"item": [
+		{
+			"name": "Cats",
+			"item": [
+				{
+					"name": "Cat List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cats",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Specific Cat",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cats/{{cat_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								"{{cat_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Cat 400",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"BobCat\",\n    \"breed\": \"SomeCat\",\n    \"years_of_experience\": 3,\n    \"salary\": 123\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/cats",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Cat",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"BobCat\",\n    \"breed\": \"Sacred Cat Of Burma\",\n    \"years_of_experience\": 3,\n    \"salary\": 123\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/cats",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cat",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"NewBobCat\",\n    \"breed\": \"SomeCat\",\n    \"years_of_experience\": 3,\n    \"salary\": 123\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/cats/{{cat_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								"{{cat_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Specific Cat",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cats/{{cat_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								"{{cat_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Missions",
+			"item": [
+				{
+					"name": "Mission List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/missions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"missions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Specific Mission",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/missions/{{mission_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"missions",
+								"{{mission_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Mission",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"assignee_id\": \"12345\",\n  \"targets\": [\n    {\n      \"name\": \"Target 1\",\n      \"country\": \"Country A\",\n      \"notes\": \"Some notes about Target 1\",\n      \"is_complete\": false\n    },\n    {\n      \"name\": \"Target 2\",\n      \"country\": \"Country B\",\n      \"notes\": \"Some notes about Target 2\",\n      \"is_complete\": false\n    }\n  ],\n  \"note\": \"This is a mission note.\",\n  \"is_complete\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/missions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"missions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Mission",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"note\": \"This is a mission note 123.\",\n  \"is_complete\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/missions/{{mission_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"missions",
+								"{{mission_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Mission",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/missions/{{mission_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"missions",
+								"{{mission_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Mission Target List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/missions/{{mission_id}}/targets",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"missions",
+								"{{mission_id}}",
+								"targets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Target For Mission",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"TargetName\",\n    \"country\": \"Itely\",\n    \"notes\": \"Some Note\",\n    \"is_complete\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/missions/{{mission_id}}/targets",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"missions",
+								"{{mission_id}}",
+								"targets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Mission",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"TargetName123\",\n    \"country\": \"Itely\",\n    \"notes\": \"Some Note111\",\n    \"is_complete\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/missions/{{mission_id}}/targets/{{target_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"missions",
+								"{{mission_id}}",
+								"targets",
+								"{{target_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "thecatapi breeds",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.thecatapi.com/v1/breeds?limit=25",
+					"protocol": "https",
+					"host": [
+						"api",
+						"thecatapi",
+						"com"
+					],
+					"path": [
+						"v1",
+						"breeds"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "25"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8080/api",
+			"type": "string"
+		},
+		{
+			"key": "cat_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "mission_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "target_id",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}
